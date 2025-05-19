@@ -1,0 +1,111 @@
+import { useState, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import API from "../../utils/api";
+import Cookies from "js-cookie";
+
+const Register = () => {
+  const { setUser } = useContext(AuthContext);
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      const response = await API.post("/users/register", formData);
+      const { token } = response.data;
+      Cookies.set("jwt", token, { expires: 7 });
+      setUser({ token });
+    } catch (err) {
+      setError(err.response.data.message || "An error occurred");
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl">
+        <div className="w-full md:w-1/2 p-8">
+          <h1 className="text-3xl font-bold mb-6">Holla, Welcome Back</h1>
+          <p className="text-gray-600 mb-8">
+            Hey, welcome back to your special place
+          </p>
+          <form onSubmit={handleSubmit}>
+            {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="username"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-6">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="password"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+            >
+              Sign Up
+            </button>
+          </form>
+          
+        </div>
+        <div className="w-full md:w-1/2 bg-purple-500 flex items-center justify-center p-8">
+          <img
+            src="https://cdn.dribbble.com/userupload/14898990/file/original-ba68e98ea10e1867e831884c3b153387.png?resize=752x&vertical=center"
+            alt="Register"
+            className="w-full h-auto"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Register;
