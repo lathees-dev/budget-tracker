@@ -1,27 +1,20 @@
 import { useState, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import API from "../../utils/api";
-import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
-const Login = () => {
-  const { setUser } = useContext(AuthContext);
+const Register = () => {
+  const { register } = useContext(AuthContext);
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
-  const [error, setError] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    try {
-      const response = await API.post("/users/login", formData);
-      const { token } = response.data;
-      Cookies.set("jwt", token, { expires: 7 });
-      setUser({ token });
-    } catch (err) {
-      setError(err.response.data.message || "An error occurred");
-    }
+    await register(formData);
+    navigate("/");
   };
 
   return (
@@ -33,8 +26,24 @@ const Login = () => {
             Hey, welcome back to your special place
           </p>
           <form onSubmit={handleSubmit}>
-            {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-
+            
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="username"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
             <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -74,15 +83,10 @@ const Login = () => {
               type="submit"
               className="w-full bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
             >
-              Sign In
+              Sign Up
             </button>
           </form>
-          <p className="mt-4 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-            <a href="#" className="text-purple-500">
-              Sign Up
-            </a>
-          </p>
+          
         </div>
         <div className="w-full md:w-1/2 bg-purple-500 flex items-center justify-center p-8">
           <img
@@ -96,4 +100,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

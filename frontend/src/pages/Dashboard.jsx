@@ -1,8 +1,9 @@
-const Dashboard = () => (
-    <div className="dashboard">
-        <h1>Dashboard</h1>
-        <p>Welcome to your dashboard!</p>
+const Dashboard = () => {
+  return (
+    <div className="p-6 text-center text-xl font-semibold">
+      Welcome to your Budget Tracker Dashboard!
     </div>
-)
+  );
+};
 
 export default Dashboard;
