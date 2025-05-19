@@ -8,23 +8,49 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = async (formData) => {
-    const res = await axios.post(
-      "http://localhost:3000/api/auth/login",
-      formData,
-      { withCredentials: true }
-    );
-    setUser(res.data);
-    return res.data; // 👈 return this so caller can act
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        formData,
+        { withCredentials: true }
+      );
+
+      // Assuming the response structure is { _id, username, email, token }
+      const { token, ...userData } = res.data;
+
+      // Store token in cookies
+      Cookies.set("token", token, { expires: 7 });
+
+      // Set user data
+      setUser(userData);
+
+      // Return user data
+      return userData;
+    } catch (error) {
+      console.error("Login error:", error);
+      return null;
+    }
   };
-  
 
   const register = async (formData) => {
-    const res = await axios.post(
-      "http://localhost:3000/api/auth/register",
-      formData,
-      { withCredentials: true }
-    );
-    setUser(res.data.user);
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/register",
+        formData,
+        { withCredentials: true }
+      );
+
+      // Assuming the response structure is { _id, username, email, token }
+      const { token, ...userData } = res.data;
+
+      // Store token in cookies
+      Cookies.set("token", token, { expires: 7 });
+
+      // Set user data
+      setUser(userData);
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
   };
 
   const logout = () => {
@@ -40,8 +66,14 @@ export const AuthProvider = ({ children }) => {
           withCredentials: true,
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then((res) => setUser(res.data.user))
-        .catch(() => setUser(null));
+        .then((res) => {
+          // Assuming the response structure is { _id, username, email }
+          setUser(res.data);
+        })
+        .catch(() => {
+          Cookies.remove("token"); // Remove token if there's an error
+          setUser(null);
+        });
     }
   }, []);
 

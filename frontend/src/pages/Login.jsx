@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
-
 const Login = () => {
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -11,9 +10,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = await login(formData);
-    console.log('user',user);
-    if (user) navigate("/"); 
+    try {
+      const user = await login(formData);
+      if (user) {
+        navigate("/dashboard"); // Navigate to the dashboard upon successful login
+      } else {
+        console.error("Login failed: User is undefined");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (

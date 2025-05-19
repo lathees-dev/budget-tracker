@@ -6,9 +6,18 @@ const {
   getTransactionById,
   updateTransaction,
   deleteTransaction,
+  getSpendingSummary,
+  getExpenditureChart,
+  getRecentExpenses,
 } = require("../controllers/transactionController");
 const { protect } = require("../middleware/authMiddleware");
 
+// Specific routes first
+router.get("/summary", protect, getSpendingSummary);
+router.get("/chart", protect, getExpenditureChart);
+router.get("/recent", protect, getRecentExpenses);
+
+// General routes later
 router.route("/").post(protect, addTransaction).get(protect, getTransactions);
 router
   .route("/:id")

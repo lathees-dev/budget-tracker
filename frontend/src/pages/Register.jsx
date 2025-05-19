@@ -14,7 +14,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await register(formData);
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (

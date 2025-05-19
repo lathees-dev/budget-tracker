@@ -16,7 +16,7 @@ const transactionSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["income", "expense"],
+        enum: ["Credit", "Debit"],
         required: [true, "Type is required"],
     },
     category: {
