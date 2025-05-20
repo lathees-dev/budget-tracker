@@ -17,8 +17,14 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: [
+      "http://localhost:3000", // Your local frontend
+      "http://localhost:5173", // Vite's default port
+      "https://budget-tracker-eight-iota.vercel.app/", // Your production frontend domain
+    ],
+    credentials: true, // This is important for withCredentials to work
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
