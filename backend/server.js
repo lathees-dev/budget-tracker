@@ -4,6 +4,8 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 connectDB();
@@ -21,6 +23,8 @@ app.use(express.json());
 
 app.use("/api/auth", userRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 // app.use("/api/budget", budgetRoutes);
 
 const PORT = process.env.PORT || 5000;

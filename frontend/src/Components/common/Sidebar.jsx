@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
-
 const Sidebar = () => {
   const { user, logout } = useContext(AuthContext);
   const { pathname } = useLocation();
@@ -10,8 +9,12 @@ const Sidebar = () => {
     { name: "Dashboard", path: "/dashboard", icon: "📊" },
     { name: "Transactions", path: "/dashboard/transactions", icon: "💳" },
     { name: "Portfolio", path: "/dashboard/portfolio", icon: "📈" },
-    { name: "Settings", path: "/dashboard/settings", icon: "⚙️" },
-    { name: "Support", path: "/dashboard/support", icon: "🆘" },
+    {
+      name: "Category Management",
+      path: "/dashboard/category-management",
+      icon: "🏷️",
+    },
+    { name: "Profile Settings", path: "/dashboard/settings", icon: "⚙️" },
   ];
 
   return (

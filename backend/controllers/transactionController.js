@@ -1,4 +1,6 @@
+// controllers/transactionController.js
 const Transaction = require("../models/transactionModel");
+const Category = require("../models/Category");
 
 const addTransaction = async (req, res) => {
   const { title, amount, type, category, date } = req.body;
@@ -6,27 +8,41 @@ const addTransaction = async (req, res) => {
     return res.status(400).json({ message: "Please fill all fields" });
   }
 
-  const transaction = await Transaction.create({
-    user: req.user._id,
-    title,
-    amount,
-    type,
-    category,
-    date,
-  });
-  res.status(201).json(transaction);
+  try {
+    const categoryDoc = await Category.findById(category);
+    if (!categoryDoc) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    const transaction = await Transaction.create({
+      user: req.user._id,
+      title,
+      amount,
+      type,
+      category,
+      date,
+    });
+
+    res.status(201).json(transaction);
+  } catch (error) {
+    res.status(500).json({ message: "Error adding transaction" });
+  }
 };
 
 const getTransactions = async (req, res) => {
   try {
     const query = req.query.search || "";
+    const regex = new RegExp(query, "i"); // Create a case-insensitive regex pattern
+
     const transactions = await Transaction.find({
       user: req.user._id,
       $or: [
-        { title: { $regex: query, $options: "i" } },
-        { category: { $regex: query, $options: "i" } },
+        { title: { $regex: regex } },
+        { "category.name": { $regex: regex } }, // Assuming category is populated and has a name field
       ],
-    }).sort({ date: -1 });
+    })
+      .populate("category")
+      .sort({ date: -1 });
 
     res.json(transactions);
   } catch (error) {
@@ -34,8 +50,11 @@ const getTransactions = async (req, res) => {
     res.status(500).json({ message: "Error fetching transactions" });
   }
 };
+
 const getTransactionById = async (req, res) => {
-  const transaction = await Transaction.findById(req.params.id);
+  const transaction = await Transaction.findById(req.params.id).populate(
+    "category"
+  );
   if (!transaction) {
     return res.status(404).json({ message: "Transaction not found" });
   }
@@ -60,8 +79,6 @@ const updateTransaction = async (req, res) => {
 
 const deleteTransaction = async (req, res) => {
   const transaction = await Transaction.findById(req.params.id);
-  console.log("Request Params:", req.params);
-
   if (!transaction) {
     return res.status(404).json({ message: "Transaction not found" });
   }
@@ -71,7 +88,6 @@ const deleteTransaction = async (req, res) => {
   }
 
   await Transaction.findByIdAndDelete(req.params.id);
-
   res.status(200).json({ message: "Transaction deleted successfully" });
 };
 

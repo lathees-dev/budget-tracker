@@ -7,6 +7,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import DashboardLayout from "./layout/DashboardLayout";
+import CategoryManagement from "./pages/CategoryManagement";
+import ProfileSettings from "./pages/ProfileSettings";
 
 function App() {
   return (
@@ -18,9 +20,14 @@ function App() {
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/transactions" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />{" "}
-            {/* Use index for the default child route */}
+            <Route index element={<Dashboard />} />
+            
             <Route path="transactions" element={<Transactions />} />
+            <Route
+              path="category-management"
+              element={<CategoryManagement />}
+            />
+            <Route path="settings" element={<ProfileSettings />} />
           </Route>
         </Routes>
       </AuthProvider>

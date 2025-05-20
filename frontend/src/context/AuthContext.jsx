@@ -1,3 +1,4 @@
+// context/AuthContext.js
 import { createContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -15,16 +16,10 @@ export const AuthProvider = ({ children }) => {
         { withCredentials: true }
       );
 
-      // Assuming the response structure is { _id, username, email, token }
-      const { token, ...userData } = res.data;
-
-      // Store token in cookies
+      const { token, ...userData } = res.data; // Destructure token and the rest as userData
       Cookies.set("token", token, { expires: 7 });
-
-      // Set user data
       setUser(userData);
-      console.log("User data:", userData);
-      // Return user data
+      console.log("login user data", userData);
       return userData;
     } catch (error) {
       console.error("Login error:", error);
@@ -40,13 +35,8 @@ export const AuthProvider = ({ children }) => {
         { withCredentials: true }
       );
 
-      // Assuming the response structure is { _id, username, email, token }
-      const { token, ...userData } = res.data;
-
-      // Store token in cookies
+      const { token, ...userData } = res.data; // Destructure token and the rest as userData
       Cookies.set("token", token, { expires: 7 });
-
-      // Set user data
       setUser(userData);
     } catch (error) {
       console.error("Registration error:", error);
@@ -67,18 +57,18 @@ export const AuthProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          // Assuming the response structure is { _id, username, email }
+          console.log("use effect user", res.data);
           setUser(res.data);
         })
         .catch(() => {
-          Cookies.remove("token"); // Remove token if there's an error
+          Cookies.remove("token");
           setUser(null);
         });
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user,setUser, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
