@@ -11,14 +11,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.use(express.json());
 
-const allowedOrigin = "https://budget-tracker-eight-iota.vercel.app/";
+// const allowedOrigin = "https://budget-tracker-eight-iota.vercel.app/";
 
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: false,
   })
 );
 
@@ -29,13 +29,12 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json());
 
 app.use("/api/auth", userRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-// app.use("/api/budget", budgetRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`server running on the port ${PORT}`));
