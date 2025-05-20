@@ -18,11 +18,14 @@ app.use(express.json());
 app.use(
   cors({
     origin: "https://budget-tracker-eight-iota.vercel.app",
-    allowedHeaders: "*",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200,
   })
 );
+
+app.options("*", cors());
 
 
 app.use("/api/auth", userRoutes);
