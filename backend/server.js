@@ -12,14 +12,13 @@ connectDB();
 
 const app = express();
 
-const allowedOrigin =
-  "https://budget-tracker-eight-iota.vercel.app/";
+const allowedOrigin = "https://budget-tracker-eight-iota.vercel.app/";
 
 app.use(
   cors({
     origin: allowedOrigin,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+    credentials: false,
   })
 );
 
