@@ -12,7 +12,8 @@ connectDB();
 
 const app = express();
 
-const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
+const allowedOrigin =
+  "https://budget-tracker-eight-iota.vercel.app/";
 
 app.use(
   cors({
