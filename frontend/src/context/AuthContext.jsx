@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await API.post(
         "/auth/login", formData,
-        { withCredentials: true }
       );
 
       const { token, ...userData } = res.data; // Destructure token and the rest as userData
