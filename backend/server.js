@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://budget-tracker-eight-iota.vercel.app",
     allowedHeaders: "*",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
