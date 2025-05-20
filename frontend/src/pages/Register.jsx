@@ -18,7 +18,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-black">
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl">
         <div className="w-full md:w-1/2 p-8">
           <h1 className="text-3xl font-bold mb-6">Holla, Welcome Back</h1>
@@ -26,7 +26,6 @@ const Register = () => {
             Hey, welcome back to your special place
           </p>
           <form onSubmit={handleSubmit}>
-            
             <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -78,7 +77,7 @@ const Register = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
-            
+
             <button
               type="submit"
               className="w-full bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
@@ -86,13 +85,12 @@ const Register = () => {
               Sign Up
             </button>
           </form>
-          
         </div>
-        <div className="w-full md:w-1/2 bg-purple-500 flex items-center justify-center p-8">
+        <div className="w-full md:w-3/4 bg-purple-500 relative overflow-hidden rounded-r-lg">
           <img
             src="https://cdn.dribbble.com/userupload/14898990/file/original-ba68e98ea10e1867e831884c3b153387.png?resize=752x&vertical=center"
             alt="Register"
-            className="w-full h-auto"
+            className="w-full h-full object-cover"
           />
         </div>
       </div>

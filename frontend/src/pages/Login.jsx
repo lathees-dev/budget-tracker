@@ -71,7 +71,7 @@ const Login = () => {
               type="submit"
               className="w-full bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
             >
-              Sign In
+              Log In
             </button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
@@ -81,11 +81,11 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        <div className="w-full md:w-1/2 bg-purple-500 flex items-center justify-center p-8">
+        <div className="w-full md:w-3/4 bg-purple-500 relative overflow-hidden rounded-r-lg">
           <img
             src="https://cdn.dribbble.com/userupload/14898990/file/original-ba68e98ea10e1867e831884c3b153387.png?resize=752x&vertical=center"
             alt="Register"
-            className="w-full h-auto"
+            className="w-full h-full object-cover"
           />
         </div>
       </div>

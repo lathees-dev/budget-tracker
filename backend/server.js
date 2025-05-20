@@ -12,6 +12,16 @@ connectDB();
 
 const app = express();
 
+const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
+
+app.use(
+  cors({
+    origin: allowedOrigin,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(
   cors({
     origin: "http://localhost:5173",

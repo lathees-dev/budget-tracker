@@ -11,8 +11,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (formData) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        formData,
+        "/auth/login", formData,
         { withCredentials: true }
       );
 
@@ -29,11 +28,9 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (formData) => {
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/register",
-        formData,
-        { withCredentials: true }
-      );
+      const res = await axios.post("/auth/register", formData, {
+        withCredentials: true,
+      });
 
       const { token, ...userData } = res.data; // Destructure token and the rest as userData
       Cookies.set("token", token, { expires: 7 });
@@ -52,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     const token = Cookies.get("token");
     if (token) {
       axios
-        .get("http://localhost:3000/api/auth/me", {
+        .get("/auth/me", {
           withCredentials: true,
           headers: { Authorization: `Bearer ${token}` },
         })

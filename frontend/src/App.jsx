@@ -1,6 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./Components/common/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -19,9 +23,16 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/transactions" element={<Navigate to="/dashboard" />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Dashboard />} />
-            
             <Route path="transactions" element={<Transactions />} />
             <Route
               path="category-management"

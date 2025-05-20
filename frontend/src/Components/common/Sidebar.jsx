@@ -1,10 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 const Sidebar = () => {
   const { user, logout } = useContext(AuthContext);
   const { pathname } = useLocation();
+  const navigate = useNavigate(); 
+  const handleLogout = () => {
+    logout();
+    navigate("/login"); 
+  };
+
   const navLinks = [
     { name: "Dashboard", path: "/dashboard", icon: "📊" },
     { name: "Transactions", path: "/dashboard/transactions", icon: "💳" },
@@ -43,7 +49,7 @@ const Sidebar = () => {
         ))}
       </ul>
       <button
-        onClick={logout}
+        onClick={handleLogout}
         className="mt-8 w-full bg-gray-700 hover:bg-gray-600 py-2 rounded-lg"
       >
         Log out
