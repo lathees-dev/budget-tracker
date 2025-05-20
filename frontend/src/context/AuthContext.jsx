@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
       // Set user data
       setUser(userData);
-
+      console.log("User data:", userData);
       // Return user data
       return userData;
     } catch (error) {

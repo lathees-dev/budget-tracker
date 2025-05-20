@@ -17,14 +17,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/transactions" element={<Navigate to="/dashboard" />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout />
-              </ProtectedRoute>
-            }
-          >
+          <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />{" "}
             {/* Use index for the default child route */}
             <Route path="transactions" element={<Transactions />} />

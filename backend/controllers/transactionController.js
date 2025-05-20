@@ -18,10 +18,22 @@ const addTransaction = async (req, res) => {
 };
 
 const getTransactions = async (req, res) => {
-    const transactions = await Transaction.find({ user: req.user._id }).sort({ date: -1 });
-    res.json(transactions);
-};
+  try {
+    const query = req.query.search || "";
+    const transactions = await Transaction.find({
+      user: req.user._id,
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ],
+    }).sort({ date: -1 });
 
+    res.json(transactions);
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    res.status(500).json({ message: "Error fetching transactions" });
+  }
+};
 const getTransactionById = async (req, res) => {
   const transaction = await Transaction.findById(req.params.id);
   if (!transaction) {

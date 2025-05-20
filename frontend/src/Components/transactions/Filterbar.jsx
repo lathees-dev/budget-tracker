@@ -1,10 +1,20 @@
 import API from "../../utils/api";
+import Cookies from "js-cookie";
 
 const FilterBar = ({ setTransactions }) => {
   const handleFilter = async (e) => {
     const query = e.target.value.toLowerCase();
     try {
-      const response = await API.get(`/transactions?search=${query}`);
+      const response = await API.get(`/transactions?search=${query}`, {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("jwt")}`,
+        },
+      });
+
+      // Log the response data for debugging
+      console.log("Filtered transactions:", response.data);
+
+      // Update the transactions state
       setTransactions(response.data);
     } catch (error) {
       console.error("Error filtering transactions:", error);

@@ -15,7 +15,6 @@ const Dashboard = () => {
         <ExpenditureChart />
       </div>
       <RecentExpenses />
-      <TransactionForm setTransactions={setTransactions} />
     </div>
   );
 };
