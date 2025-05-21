@@ -13,13 +13,13 @@ const Sidebar = () => {
 
   const navLinks = [
     { name: "Dashboard", path: "/dashboard", icon: "📊" },
-    { name: "Transactions", path: "/dashboard/transactions", icon: "💳" },
-    { name: "Portfolio", path: "/dashboard/portfolio", icon: "📈" },
     {
-      name: "Category Management",
+      name: "Category",
       path: "/dashboard/category-management",
       icon: "🏷️",
     },
+    { name: "Transactions", path: "/dashboard/transactions", icon: "💳" },
+    { name: "Analytics", path: "/dashboard/analytics", icon: "📈" },
     { name: "Profile Settings", path: "/dashboard/settings", icon: "⚙️" },
   ];
 

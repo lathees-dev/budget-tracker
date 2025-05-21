@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import API from "../utils/api";
 import Cookies from "js-cookie";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const CategoryManagement = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ name: "", budget: 0 });
+  const [editingCategory, setEditingCategory] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -45,6 +47,36 @@ const CategoryManagement = () => {
       setCategories(response.data);
     } catch (error) {
       console.error("Error adding category:", error);
+    }
+  };
+
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
+    setNewCategory({ name: category.name, budget: category.budget });
+  };
+
+  const handleUpdateCategory = async () => {
+    try {
+      const token = Cookies.get("jwt");
+      await API.put(
+        `/categories/${editingCategory._id}`,
+        { name: newCategory.name, budget: newCategory.budget },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setEditingCategory(null);
+      setNewCategory({ name: "", budget: 0 });
+      const response = await API.get("/categories", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Error updating category:", error);
     }
   };
 
@@ -93,10 +125,10 @@ const CategoryManagement = () => {
           className="border border-gray-600 bg-gray-700 text-white px-4 py-2 rounded shadow-sm ml-2"
         />
         <button
-          onClick={handleAddCategory}
+          onClick={editingCategory ? handleUpdateCategory : handleAddCategory}
           className="ml-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded"
         >
-          Add Category
+          {editingCategory ? "Update Category" : "Add Category"}
         </button>
       </div>
       <ul className="space-y-2">
@@ -108,12 +140,20 @@ const CategoryManagement = () => {
             <span>
               {category.name} - Budget: ₹{category.budget}
             </span>
-            <button
-              onClick={() => handleDeleteCategory(category._id)}
-              className="text-red-400 hover:text-red-500"
-            >
-              Delete
-            </button>
+            <div>
+              <button
+                onClick={() => handleEditCategory(category)}
+                className="text-blue-400 hover:text-blue-500 mr-2"
+              >
+                <FaEdit />
+              </button>
+              <button
+                onClick={() => handleDeleteCategory(category._id)}
+                className="text-red-400 hover:text-red-500"
+              >
+                <FaTrash />
+              </button>
+            </div>
           </li>
         ))}
       </ul>

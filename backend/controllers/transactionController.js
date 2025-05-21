@@ -131,7 +131,7 @@ const getExpenditureChart = async (req, res) => {
       { $match: { user: req.user._id } },
       { $group: { _id: "$category", total: { $sum: "$amount" } } },
     ]);
-
+    console.log('char data', chartData);
     const labels = chartData.map((item) => item._id);
     const data = chartData.map((item) => item.total);
 

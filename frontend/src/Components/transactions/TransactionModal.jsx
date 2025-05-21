@@ -15,15 +15,38 @@ const TransactionModal = ({
     type: "",
     category: "",
   });
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = Cookies.get("jwt");
+        const response = await API.get("/categories", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     if (transaction) {
+      // Format the date to YYYY-MM-DD for the date input field
+      const formattedDate = new Date(transaction.date)
+        .toISOString()
+        .split("T")[0];
       setFormData({
-        date: transaction.date,
+        date: formattedDate,
         title: transaction.title,
         amount: transaction.amount,
         type: transaction.type,
-        category: transaction.category,
+        category: transaction.category._id, // Ensure the category ID is set
       });
     } else {
       setFormData({
@@ -53,7 +76,7 @@ const TransactionModal = ({
           },
         });
       }
-        const response = await API.get("/transactions", {
+      const response = await API.get("/transactions", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -117,20 +140,26 @@ const TransactionModal = ({
               className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white"
             >
               <option value="">Select Type</option>
-              <option value="Credit">Credit</option>
-              <option value="Debit">Debit</option>
+              <option value="Credit">Income (Credit)</option>
+              <option value="Debit">Expense (Debit)</option>
             </select>
           </div>
           <div className="mb-4">
             <label className="block text-gray-300 mb-2">Category</label>
-            <input
-              type="text"
+            <select
               value={formData.category}
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
               }
               className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white"
-            />
+            >
+              <option value="">Select Category</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex justify-end">
             <button

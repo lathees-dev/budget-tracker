@@ -13,6 +13,7 @@ import Transactions from "./pages/Transactions";
 import DashboardLayout from "./layout/DashboardLayout";
 import CategoryManagement from "./pages/CategoryManagement";
 import ProfileSettings from "./pages/ProfileSettings";
+import Analytics from "./pages/Analytics";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
               path="category-management"
               element={<CategoryManagement />}
             />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="settings" element={<ProfileSettings />} />
           </Route>
         </Routes>

@@ -50,7 +50,7 @@ const TransactionTable = ({ data, setTransactions, openModal }) => {
               <td className="py-3 px-4">{tx.title}</td>
               <td className="py-3 px-4">₹{tx.amount}</td>
               <td className="py-3 px-4">{tx.type}</td>
-              <td className="py-3 px-4">{tx.category}</td>
+              <td className="py-3 px-4">{tx.category.name}</td>
               <td className="py-3 px-4">
                 <button
                   className="text-blue-400 hover:text-blue-500 mr-2"

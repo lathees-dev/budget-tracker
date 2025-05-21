@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../../utils/api";
 import Cookies from "js-cookie";
 
@@ -12,6 +12,26 @@ const TransactionForm = ({ transaction, setTransactions }) => {
       category: "",
     }
   );
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = Cookies.get("jwt");
+        const response = await API.get("/categories", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,7 +65,10 @@ const TransactionForm = ({ transaction, setTransactions }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
+    <form
+      onSubmit={handleSubmit}
+      className="mb-4 p-4 bg-gray-800 rounded-lg shadow-md"
+    >
       <div className="mb-4">
         <label className="block text-gray-300 mb-2">Date</label>
         <input
@@ -87,12 +110,20 @@ const TransactionForm = ({ transaction, setTransactions }) => {
       </div>
       <div className="mb-4">
         <label className="block text-gray-300 mb-2">Category</label>
-        <input
-          type="text"
+        <select
           value={formData.category}
-          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, category: e.target.value })
+          }
           className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white"
-        />
+        >
+          <option value="">Select Category</option>
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
       </div>
       <button
         type="submit"
