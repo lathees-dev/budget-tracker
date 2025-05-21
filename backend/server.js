@@ -18,21 +18,16 @@ app.use(express.json());
 app.use(
   cors({
     origin: "https://budget-tracker-eight-iota.vercel.app",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    optionsSuccessStatus: 200,
+    allowedHeaders: "*",
+    credentials: false,
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
-
-app.options("*", cors());
-
 
 app.use("/api/auth", userRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`server running on the port ${PORT}`));
