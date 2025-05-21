@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (formData) => {
     try {
       const res = await API.post("/auth/register", formData, {
-        withCredentials: true,
+        withCredentials: false,
       });
 
       const { token, ...userData } = res.data; // Destructure token and the rest as userData
