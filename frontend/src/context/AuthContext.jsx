@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       const { token, ...userData } = res.data; // Destructure token and the rest as userData
-      Cookies.set("token", token, { expires: 7 });
+      Cookies.set("jwt", token, { expires: 7 });
       setUser(userData);
     } catch (error) {
       console.error("Registration error:", error);
