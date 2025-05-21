@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (formData) => {
     try {
-      const res = await axios.post("/auth/register", formData, {
+      const res = await API.post("/auth/register", formData, {
         withCredentials: true,
       });
 
