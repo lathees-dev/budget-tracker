@@ -41,12 +41,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    Cookies.remove("token");
+    Cookies.remove("jwt");
     setUser(null);
   };
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("jwt");
     if (token) {
       axios
         .get("/auth/me", {
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
           setUser(res.data);
         })
         .catch(() => {
-          Cookies.remove("token");
+          Cookies.remove("jwt");
           setUser(null);
         });
     }
