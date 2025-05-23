@@ -31,7 +31,7 @@ const Sidebar = () => {
           alt="avatar"
           className="rounded-full w-10 h-10 mr-3"
         />
-        <h1 className="text-xl font-bold">Hello, {user?.username || "User"}</h1>
+        <h1 className="text-xl font-bold">Hello, {user?.username || "Lathees"}</h1>
       </div>
       <ul className="space-y-4">
         {navLinks.map(({ name, path, icon }) => (
