@@ -41,13 +41,13 @@ const Transactions = () => {
   return (
     <div>
       <div className="mb-4 flex flex-col">
+        <FilterBar setTransactions={setTransactions} />
         <button
           onClick={() => openModal()}
-          className="bg-purple-500 hover:bg-purple-600 text-white p-2 rounded self-end mb-2 cursor-pointer"
+          className="bg-purple-500 hover:bg-purple-600 text-white p-2 rounded self-end mb-2 cursor-pointer mt-4"
         >
           Add Transaction
         </button>
-        <FilterBar setTransactions={setTransactions} />
       </div>
       <TransactionTable
         data={transactions}

@@ -17,12 +17,23 @@ const addCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find({ user: req.user._id });
+    const query = req.query.search || "";
+
+    // Only apply regex to the name field
+    const categories = await Category.find({
+      user: req.user._id,
+      $or: [
+        { name: { $regex: query, $options: "i" } }, // Case-insensitive search by name
+      ],
+    });
+
     res.json(categories);
   } catch (error) {
+    console.error("Error fetching categories:", error);
     res.status(500).json({ message: "Error fetching categories" });
   }
 };
+
 
 const updateCategory = async (req, res) => {
   const { name, budget } = req.body;

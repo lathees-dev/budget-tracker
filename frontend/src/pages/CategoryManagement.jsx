@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import API from "../utils/api";
 import Cookies from "js-cookie";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import CategoryModal from "../Components/common/CategoryModal";
+import CategoryFilterBar from "../Components/common/CategoryFilterBar";
 
 const CategoryManagement = () => {
   const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState({ name: "", budget: 0 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
 
   useEffect(() => {
@@ -26,58 +28,9 @@ const CategoryManagement = () => {
     fetchCategories();
   }, []);
 
-  const handleAddCategory = async () => {
-    try {
-      const token = Cookies.get("jwt");
-      await API.post(
-        "/categories",
-        { name: newCategory.name, budget: newCategory.budget },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setNewCategory({ name: "", budget: 0 });
-      const response = await API.get("/categories", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Error adding category:", error);
-    }
-  };
-
   const handleEditCategory = (category) => {
     setEditingCategory(category);
-    setNewCategory({ name: category.name, budget: category.budget });
-  };
-
-  const handleUpdateCategory = async () => {
-    try {
-      const token = Cookies.get("jwt");
-      await API.put(
-        `/categories/${editingCategory._id}`,
-        { name: newCategory.name, budget: newCategory.budget },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setEditingCategory(null);
-      setNewCategory({ name: "", budget: 0 });
-      const response = await API.get("/categories", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Error updating category:", error);
-    }
+    setIsModalOpen(true);
   };
 
   const handleDeleteCategory = async (id) => {
@@ -102,33 +55,16 @@ const CategoryManagement = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Category Management</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          value={newCategory.name}
-          onChange={(e) =>
-            setNewCategory({ ...newCategory, name: e.target.value })
-          }
-          placeholder="Category Name"
-          className="border border-gray-600 bg-gray-700 text-white px-4 py-2 rounded shadow-sm"
-        />
-        <input
-          type="number"
-          value={newCategory.budget}
-          onChange={(e) =>
-            setNewCategory({
-              ...newCategory,
-              budget: parseFloat(e.target.value),
-            })
-          }
-          placeholder="Budget"
-          className="border border-gray-600 bg-gray-700 text-white px-4 py-2 rounded shadow-sm ml-2"
-        />
+      <div className="mb-4 flex flex-col">
+        <CategoryFilterBar setCategories={setCategories} />
         <button
-          onClick={editingCategory ? handleUpdateCategory : handleAddCategory}
-          className="ml-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded"
+          onClick={() => {
+            setEditingCategory(null);
+            setIsModalOpen(true);
+          }}
+          className="ml-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded flex items-center self-end"
         >
-          {editingCategory ? "Update Category" : "Add Category"}
+          <FaPlus className="mr-2" /> Add Category
         </button>
       </div>
       <ul className="space-y-2">
@@ -157,6 +93,12 @@ const CategoryManagement = () => {
           </li>
         ))}
       </ul>
+      <CategoryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        category={editingCategory}
+        setCategories={setCategories}
+      />
     </div>
   );
 };
