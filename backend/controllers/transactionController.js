@@ -129,10 +129,33 @@ const getExpenditureChart = async (req, res) => {
   try {
     const chartData = await Transaction.aggregate([
       { $match: { user: req.user._id } },
-      { $group: { _id: "$category", total: { $sum: "$amount" } } },
+      {
+        $group: {
+          _id: "$category",
+          total: { $sum: "$amount" },
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
+          as: "categoryDetails",
+        },
+      },
+      {
+        $unwind: "$categoryDetails",
+      },
+      {
+        $project: {
+          _id: 0,
+          categoryName: "$categoryDetails.name",
+          total: 1,
+        },
+      },
     ]);
-    console.log('char data', chartData);
-    const labels = chartData.map((item) => item._id);
+
+    const labels = chartData.map((item) => item.categoryName);
     const data = chartData.map((item) => item.total);
 
     res.json({ labels, data });
@@ -140,6 +163,7 @@ const getExpenditureChart = async (req, res) => {
     res.status(500).json({ message: "Error fetching chart data" });
   }
 };
+
 
 const getRecentExpenses = async (req, res) => {
   try {

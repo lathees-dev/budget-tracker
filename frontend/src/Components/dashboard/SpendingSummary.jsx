@@ -24,7 +24,7 @@ const SpendingSummary = () => {
   }, []);
 
   return (
-    <div className="bg-gray-800 shadow-md rounded-lg p-4 mb-6">
+    <div className="bg-gray-800 shadow-md rounded-lg p-4 self-start w-full">
       <h2 className="text-xl font-bold mb-4">Spending Summary</h2>
       <div className="flex justify-between">
         <div>

@@ -24,10 +24,10 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl">
         <div className="w-full md:w-1/2 p-8">
-          <h1 className="text-3xl font-bold mb-6">Holla, Welcome Back</h1>
+          <h1 className="text-3xl font-bold mb-6">Hello, Welcome Back</h1>
           <p className="text-gray-600 mb-8">
             Hey, welcome back to your special place
           </p>

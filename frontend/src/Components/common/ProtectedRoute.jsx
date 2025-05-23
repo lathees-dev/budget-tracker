@@ -1,17 +1,27 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+  const [isVerified, setIsVerified] = useState(false);
 
-  // Check if the user is authenticated
-  if (!user) {
-    // Redirect to the login page if the user is not authenticated
+  useEffect(() => {
+    const token = Cookies.get("jwt");
+    if (token && !user) {
+      // Simply mark as authenticated (no decoding)
+      setUser(true); // or any dummy value to indicate login
+    }
+    setIsVerified(true);
+  }, [user, setUser]);
+
+  if (!isVerified) return null; // or <LoadingScreen />
+
+  if (!Cookies.get("jwt")) {
     return <Navigate to="/login" replace />;
   }
 
-  // Render the protected content if the user is authenticated
   return children;
 };
 

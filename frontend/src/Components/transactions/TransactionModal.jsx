@@ -36,29 +36,29 @@ const TransactionModal = ({
   }, []);
 
   useEffect(() => {
-    if (transaction) {
-      // Format the date to YYYY-MM-DD for the date input field
-      const formattedDate = new Date(transaction.date)
-        .toISOString()
-        .split("T")[0];
-      setFormData({
-        date: formattedDate,
-        title: transaction.title,
-        amount: transaction.amount,
-        type: transaction.type,
-        category: transaction.category._id, // Ensure the category ID is set
-      });
-    } else {
-      setFormData({
-        date: "",
-        title: "",
-        amount: "",
-        type: "",
-        category: "",
-      });
+    if (isOpen) {
+      if (transaction) {
+        const formattedDate = new Date(transaction.date)
+          .toISOString()
+          .split("T")[0];
+        setFormData({
+          date: formattedDate,
+          title: transaction.title,
+          amount: transaction.amount,
+          type: transaction.type,
+          category: transaction.category._id,
+        });
+      } else {
+        setFormData({
+          date: "",
+          title: "",
+          amount: "",
+          type: "",
+          category: "",
+        });
+      }
     }
-  }, [transaction]);
-
+  }, [isOpen, transaction]); 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = Cookies.get("jwt");
@@ -91,8 +91,8 @@ const TransactionModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-1/2 max-w-1/2">
         <h2 className="text-xl font-bold mb-4">
           {transaction ? "Edit Transaction" : "Add Transaction"}
         </h2>

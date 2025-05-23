@@ -48,10 +48,15 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <SpendingSummary summary={summary} />
-        <ExpenditureChart />
-      </div>
-      <RecentExpenses />
+  {/* Left Column: Summary + Recent Transactions */}
+  <div className="flex flex-col gap-4">
+    <SpendingSummary summary={summary} />
+    <RecentExpenses />
+  </div>
+
+  {/* Right Column: Expenditure Chart */}
+  <ExpenditureChart />
+</div>
     </div>
   );
 };

@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import Login from './Login';
+
 
 const Register = () => {
   const { register } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -19,12 +19,12 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl">
         <div className="w-full md:w-1/2 p-8">
-          <h1 className="text-3xl font-bold mb-6">Holla, Welcome Back</h1>
-          <p className="text-gray-600 mb-8">
-            Hey, welcome back to your special place
+          <h1 className="text-2xl font-bold mb-3">Create Your Account</h1>
+          <p className="text-gray-600 text-sm mb-8">
+            Start your journey with us by setting up your account.
           </p>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
