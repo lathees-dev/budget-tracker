@@ -27,7 +27,7 @@ const Sidebar = () => {
     <div className="w-64 bg-gray-800 shadow-md h-full p-6">
       <div className="flex items-center mb-8">
         <img
-          src="https://i.pravatar.cc/40"
+          src="https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740"
           alt="avatar"
           className="rounded-full w-10 h-10 mr-3"
         />

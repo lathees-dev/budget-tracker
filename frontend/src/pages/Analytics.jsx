@@ -15,7 +15,7 @@ import {
   LineElement,
 } from "chart.js";
 
-// Register the necessary components for ChartJS
+// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -36,18 +36,16 @@ const Analytics = () => {
     const fetchData = async () => {
       try {
         const token = Cookies.get("jwt");
-        const transactionsResponse = await API.get("/transactions", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const categoriesResponse = await API.get("/categories", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setTransactions(transactionsResponse.data);
-        setCategories(categoriesResponse.data);
+        const [transactionsRes, categoriesRes] = await Promise.all([
+          API.get("/transactions", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          API.get("/categories", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+        setTransactions(transactionsRes.data);
+        setCategories(categoriesRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -59,9 +57,14 @@ const Analytics = () => {
   // Process data for category-wise spending
   const categorySpending = categories.map((category) => {
     const spending = transactions
-      .filter((tx) => tx.category === category._id)
+      .filter((tx) => String(tx.category) === String(category._id))
       .reduce((sum, tx) => sum + tx.amount, 0);
-    return { name: category.name, spending, budget: category.budget };
+
+    return {
+      name: category.name,
+      spending: parseFloat(spending.toFixed(2)),
+      budget: parseFloat(category.budget.toFixed(2)),
+    };
   });
 
   // Process data for monthly spending trends
@@ -79,6 +82,7 @@ const Analytics = () => {
 
   // Process data for top expenses
   const topExpenses = [...transactions]
+    .filter((tx) => tx.type === "Debit")
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 5);
 
@@ -99,7 +103,7 @@ const Analytics = () => {
     return acc;
   }, {});
 
-  // Chart data
+  // Chart data configurations
   const spendingData = {
     labels: categorySpending.map((cs) => cs.name),
     datasets: [
@@ -138,11 +142,13 @@ const Analytics = () => {
         label: "Budget",
         data: categorySpending.map((cs) => cs.budget),
         backgroundColor: "#4BC0C0",
+        borderWidth: 1,
       },
       {
         label: "Actual Spending",
         data: categorySpending.map((cs) => cs.spending),
         backgroundColor: "#FF6384",
+        borderWidth: 1,
       },
     ],
   };
@@ -151,13 +157,12 @@ const Analytics = () => {
     labels: Object.keys(savingsRate),
     datasets: [
       {
-        label: "Savings Rate",
-        data: Object.keys(savingsRate).map(
-          (month) =>
-            ((savingsRate[month].income - savingsRate[month].expenses) /
-              savingsRate[month].income) *
-            100
-        ),
+        label: "Savings Rate (%)",
+        data: Object.keys(savingsRate).map((month) => {
+          const income = savingsRate[month].income;
+          const expenses = savingsRate[month].expenses;
+          return income ? ((income - expenses) / income) * 100 : 0;
+        }),
         borderColor: "#FFCE56",
         backgroundColor: "rgba(255, 206, 86, 0.2)",
         fill: true,
@@ -187,34 +192,60 @@ const Analytics = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Analytics</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-700 p-4 rounded">
-          <h2 className="text-xl font-bold mb-2">Spending by Category</h2>
+      <h1 className="text-3xl font-bold mb-6 text-white">
+        Analytics Dashboard
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Spending by Category */}
+        <div className="bg-gray-800 p-6 rounded-lg shadow-md h-96">
+          <h2 className="text-xl font-semibold mb-4 text-white">
+            Spending by Category
+          </h2>
           <Pie data={spendingData} />
         </div>
-        <div className="bg-gray-700 p-4 rounded">
-          <h2 className="text-xl font-bold mb-2">Monthly Spending Trends</h2>
+
+        {/* Monthly Spending Trends */}
+        <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-white">
+            Monthly Spending Trends
+          </h2>
           <Line data={monthlySpendingData} />
         </div>
-        <div className="bg-gray-700 p-4 rounded">
-          <h2 className="text-xl font-bold mb-2">Budget vs. Actual Spending</h2>
+
+        {/* Budget vs. Actual Spending */}
+        <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-white">
+            Budget vs. Actual Spending
+          </h2>
           <Bar data={budgetVsSpendingData} />
         </div>
-        <div className="bg-gray-700 p-4 rounded">
-          <h2 className="text-xl font-bold mb-2">Savings Rate</h2>
+
+        {/* Savings Rate */}
+        <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-white">
+            Savings Rate
+          </h2>
           <Line data={savingsRateData} />
         </div>
-        <div className="bg-gray-700 p-4 rounded">
-          <h2 className="text-xl font-bold mb-2">Income vs. Expenses</h2>
+
+        {/* Income vs. Expenses */}
+        <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-white">
+            Income vs. Expenses
+          </h2>
           <Bar data={incomeVsExpensesData} />
         </div>
-        <div className="bg-gray-700 p-4 rounded">
-          <h2 className="text-xl font-bold mb-2">Top Expenses</h2>
-          <ul>
+
+        {/* Top Expenses */}
+        <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-white">
+            Top Expenses
+          </h2>
+          <ul className="text-white">
             {topExpenses.map((expense, index) => (
               <li key={index} className="mb-2">
-                {expense.title}: ₹{expense.amount}
+                <span className="font-medium">{expense.title}</span>: ₹
+                {expense.amount}
               </li>
             ))}
           </ul>
